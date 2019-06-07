@@ -25,12 +25,6 @@
 
         el.append(name);
 
-        let uid = document.createElement('div');
-        uid.classList.add('uid');
-        uid.innerHTML = tag.uid;
-
-        el.append(uid);
-
         return el;
     };
 
