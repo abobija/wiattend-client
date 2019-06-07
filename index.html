@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+		<title>WiAttend</title>
+		<script>
+            $(document).ready(() => {
+                let $wsStatus = $('.ws-status');
+                let $tags = $('.tags');
+
+                let $tag = tag => $('<li />')
+                    .addClass('tag')
+                    .attr('id', 'tag-' + tag.id)
+                    .append(
+                        $('<div />').addClass('name')
+                        .append($('<span />').addClass('fname').append(tag.first_name))
+                        .append($('<span />').addClass('lname').append(tag.last_name))
+                    )
+                    .append($('<div />').addClass('uid').append(tag.uid))
+                    .addClass(tag.present_status === 1 ? 'present' : 'absent');
+
+                let ws = new WebSocket('ws://192.168.0.105:8181');
+
+                ws.onopen = () => { $wsStatus.removeClass('closed').addClass('opened').find('.title').html('Connected'); };
+                ws.onclose = () => { $wsStatus.removeClass('opened').addClass('closed').find('.title').html('Disconnected'); };
+
+                ws.onmessage = e => {
+                    let msg = JSON.parse(e.data);
+
+                    if(msg.event === 'logged') {
+                        let tag = msg.data;
+
+                        $tags.find('[id="tag-' + tag.id + '"]')
+                            .removeClass('present')
+                            .removeClass('absent')
+                            .addClass(tag.next_direction === 1 ? 'present' : 'absent');
+                    }
+                };
+
+                $.getJSON('http://192.168.0.105:8181/tags', res => {
+                    res.data.forEach(tag => $tags.append($tag(tag)));
+                });
+            });
+		</script>
+		<style>
+            .clearfix::after { content: ""; clear: both; display: table; }
+			body { font-family: 'Segoe UI'; margin: 0; padding: 0; }
+            h1.title { 
+                padding: 9px 30px;
+                background-color: #478eca;
+                color: white;
+                text-shadow: 1px 1px 0px black;
+            }
+			ul, li { padding: 0; margin: 0; list-style-type: none; }
+            .tags { margin: 50px }
+            .tag {
+                float: left;
+                width: 280px;
+                padding: 40px 20px;
+                margin: 10px;
+                background: #ffffff;
+                border-radius: 10px;
+                box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.51);
+                text-align: center;
+                border: 1px solid #fff;
+            }
+            .tag.present { border-color: #14d800; box-shadow: 0px 0px 7px #18af18; }
+            .tag .name { font-size: 25px }
+            .tag .fname, .tag .lname { margin: 3px }
+            .tag .uid { color: #a5a5a5; font-size: 80%;  margin-top: 5px; }
+            .ws-status { margin: 30px; }
+            .ws-status .ico {
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                border-radius: 100%;
+            }
+            .ws-status.opened { color: green; }
+            .ws-status.opened .ico { background-color: green; }
+            .ws-status.closed { color: red; }
+            .ws-status.closed .ico { background-color: red; }
+		</style>
+	</head>
+	<body>
+        <div>
+            <h1 class="title">WiAttend</h1>
+            <div class="ws-status">
+                <span class="ico"></span>
+                <span class="title">Connecting to server...</span>
+            </div>
+            <ul class="tags clearfix"></ul>
+        </div>
+	</body>
+</html>
