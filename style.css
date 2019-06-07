@@ -1,4 +1,5 @@
 .clearfix::after { content: ""; clear: both; display: table; }
+.clearfix > .left { float: left }
 body { font-family: 'Segoe UI'; margin: 0; padding: 0; }
 h1.title { 
     padding: 9px 30px;
@@ -7,7 +8,7 @@ h1.title {
     text-shadow: 1px 1px 0px black;
 }
 ul, li { padding: 0; margin: 0; list-style-type: none; }
-.tags { margin: 50px }
+.tags { margin: 50px; width: 70%; }
 .tag {
     float: left;
     width: 280px;
