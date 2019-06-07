@@ -1,12 +1,12 @@
 (() => {
     let wsStatus = document.getElementsByClassName('ws-status')[0];
-    let $tags = $('.tags');
+    let tags = document.getElementsByClassName('tags')[0];
 
     let tagElement = tag => {
         let el = document.createElement('li');
         el.classList.add('tag');
 
-        el.id = 'tag-' + tag.id;
+        el.classList.add('tag-' + tag.id);
         el.classList.add(tag.present_status === 1 ? 'present' : 'absent');
         
         let name = document.createElement('div');
@@ -20,16 +20,16 @@
         lname.classList.add('lname');
         lname.innerHTML = tag.last_name;
         
-        name.appendChild(fname);
-        name.appendChild(lname);
+        name.append(fname);
+        name.append(lname);
 
-        el.appendChild(name);
+        el.append(name);
 
         let uid = document.createElement('div');
         uid.classList.add('uid');
         uid.innerHTML = tag.uid;
 
-        el.appendChild(uid);
+        el.append(uid);
 
         return el;
     };
@@ -54,17 +54,22 @@
         if(msg.event === 'logged') {
             let tag = msg.data;
 
-            let $loggedTag = $tags.find('[id="tag-' + tag.id + '"]')
-                .removeClass('present').removeClass('absent')
-                .addClass(tag.next_direction === 1 ? 'present' : 'absent')
-                .addClass('animated ' + config.tagAnimateCssEffect);
+            let loggedTag = tags.getElementsByClassName('tag-' + tag.id)[0];
+
+            loggedTag.classList.remove('present');
+            loggedTag.classList.remove('absent');
+            loggedTag.classList.add(tag.next_direction === 1 ? 'present' : 'absent');
+            loggedTag.classList.add('animated');
+            loggedTag.classList.add(config.tagAnimateCssEffect);
             
-            setTimeout(() => $loggedTag.removeClass('animated')
-                .removeClass(config.tagAnimateCssEffect), 1500);
+            setTimeout(() => {
+                loggedTag.classList.remove('animated');
+                loggedTag.classList.remove(config.tagAnimateCssEffect);
+            }, 1500);
         }
     };
 
     fetch('http://' + config.wiattendServerUrl + '/tags')
         .then(res => res.json())
-        .then(json => json.data.forEach(tag => $tags.append(tagElement(tag))));
+        .then(json => json.data.forEach(tag => tags.append(tagElement(tag))));
 })();
