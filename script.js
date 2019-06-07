@@ -37,7 +37,7 @@ $(document).ready(() => {
         }
     };
 
-    $.getJSON('http://' + config.wiattendServerUrl + '/tags', res => {
-        res.data.forEach(tag => $tags.append($tag(tag)));
-    });
+    fetch('http://' + config.wiattendServerUrl + '/tags')
+        .then(res => res.json())
+        .then(json => json.data.forEach(tag => $tags.append($tag(tag))));
 });
