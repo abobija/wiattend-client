@@ -2,16 +2,37 @@
     let wsStatus = document.getElementsByClassName('ws-status')[0];
     let $tags = $('.tags');
 
-    let $tag = tag => $('<li />')
-        .addClass('tag')
-        .attr('id', 'tag-' + tag.id)
-        .append(
-            $('<div />').addClass('name')
-            .append($('<span />').addClass('fname').append(tag.first_name))
-            .append($('<span />').addClass('lname').append(tag.last_name))
-        )
-        .append($('<div />').addClass('uid').append(tag.uid))
-        .addClass(tag.present_status === 1 ? 'present' : 'absent');
+    let tagElement = tag => {
+        let el = document.createElement('li');
+        el.classList.add('tag');
+
+        el.id = 'tag-' + tag.id;
+        el.classList.add(tag.present_status === 1 ? 'present' : 'absent');
+        
+        let name = document.createElement('div');
+        name.classList.add('name');
+
+        let fname = document.createElement('span');
+        fname.classList.add('fname');
+        fname.innerHTML = tag.first_name;
+
+        let lname = document.createElement('span');
+        lname.classList.add('lname');
+        lname.innerHTML = tag.last_name;
+        
+        name.appendChild(fname);
+        name.appendChild(lname);
+
+        el.appendChild(name);
+
+        let uid = document.createElement('div');
+        uid.classList.add('uid');
+        uid.innerHTML = tag.uid;
+
+        el.appendChild(uid);
+
+        return el;
+    };
 
     let ws = new WebSocket('ws://' + config.wiattendServerUrl);
 
@@ -45,5 +66,5 @@
 
     fetch('http://' + config.wiattendServerUrl + '/tags')
         .then(res => res.json())
-        .then(json => json.data.forEach(tag => $tags.append($tag(tag))));
+        .then(json => json.data.forEach(tag => $tags.append(tagElement(tag))));
 })();
