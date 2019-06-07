@@ -1,4 +1,4 @@
-$(document).ready(() => {
+(() => {
     let wsStatus = document.getElementsByClassName('ws-status')[0];
     let $tags = $('.tags');
 
@@ -46,4 +46,4 @@ $(document).ready(() => {
     fetch('http://' + config.wiattendServerUrl + '/tags')
         .then(res => res.json())
         .then(json => json.data.forEach(tag => $tags.append($tag(tag))));
-});
+})();
