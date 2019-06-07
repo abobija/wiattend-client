@@ -3,6 +3,7 @@
 	<head>
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+        <script src="config.js"></script>
 		<title>WiAttend</title>
 		<script>
             $(document).ready(() => {
@@ -20,7 +21,7 @@
                     .append($('<div />').addClass('uid').append(tag.uid))
                     .addClass(tag.present_status === 1 ? 'present' : 'absent');
 
-                let ws = new WebSocket('ws://192.168.0.105:8181');
+                let ws = new WebSocket('ws://' + config.wiattendServerUrl);
 
                 ws.onopen = () => { $wsStatus.removeClass('closed').addClass('opened').find('.title').html('Connected'); };
                 ws.onclose = () => { $wsStatus.removeClass('opened').addClass('closed').find('.title').html('Disconnected'); };
@@ -38,7 +39,7 @@
                     }
                 };
 
-                $.getJSON('http://192.168.0.105:8181/tags', res => {
+                $.getJSON('http://' + config.wiattendServerUrl + '/tags', res => {
                     res.data.forEach(tag => $tags.append($tag(tag)));
                 });
             });
