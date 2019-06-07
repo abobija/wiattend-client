@@ -15,8 +15,11 @@ $(document).ready(() => {
 
     let ws = new WebSocket('ws://' + config.wiattendServerUrl);
 
-    ws.onopen = () => { $wsStatus.removeClass('closed').addClass('opened').find('.title').html('Connected'); };
-    ws.onclose = () => { $wsStatus.removeClass('opened').addClass('closed').find('.title').html('Disconnected'); };
+    ws.onopen = () => $wsStatus.removeClass('closed').addClass('opened')
+            .find('.title').html(config.wiattendServerUrl + ' Connected');
+
+    ws.onclose = () => $wsStatus.removeClass('opened').addClass('closed')
+            .find('.title').html(config.wiattendServerUrl + ' Disconnected');
 
     ws.onmessage = e => {
         let msg = JSON.parse(e.data);
