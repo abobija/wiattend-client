@@ -8,7 +8,7 @@ h1.title {
     text-shadow: 1px 1px 0px black;
 }
 ul, li { padding: 0; margin: 0; list-style-type: none; }
-.tags { margin: 50px; width: 70%; }
+.tags { margin: 0 50px; width: 60%; }
 .tag {
     float: left;
     width: 280px;
