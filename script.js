@@ -24,10 +24,13 @@ $(document).ready(() => {
         if(msg.event === 'logged') {
             let tag = msg.data;
 
-            $tags.find('[id="tag-' + tag.id + '"]')
-                .removeClass('present')
-                .removeClass('absent')
-                .addClass(tag.next_direction === 1 ? 'present' : 'absent');
+            let $loggedTag = $tags.find('[id="tag-' + tag.id + '"]')
+                .removeClass('present').removeClass('absent')
+                .addClass(tag.next_direction === 1 ? 'present' : 'absent')
+                .addClass('animated ' + config.tagAnimateCssEffect);
+            
+            setTimeout(() => $loggedTag.removeClass('animated')
+                .removeClass(config.tagAnimateCssEffect), 1500);
         }
     };
 
