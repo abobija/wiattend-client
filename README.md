@@ -1,5 +1,5 @@
 # wiattend-client
-Client for Wiattend [ NodeJS ] Server [wiattend-srv](https://github.com/abobija/wiattend-srv).
+Client for wiattend NodeJS server [wiattend-srv](https://github.com/abobija/wiattend-srv).
 
 ## Abstraction
 
