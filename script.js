@@ -38,7 +38,7 @@
         let dir  = document.createElement('td');
 
         name.innerHTML = (log.first_name || '') + ' ' + log.last_name;
-        time.innerHTML = log.time;
+        time.innerHTML = new Date(Date.parse(log.time)).toLocaleString();
         dir.innerHTML = log.direction === 1 ? "IN" : "OUT";
 
         el.append(name);
