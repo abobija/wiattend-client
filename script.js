@@ -1,6 +1,7 @@
 (() => {
     let wsStatus = document.getElementsByClassName('ws-status')[0];
     let tags = document.getElementsByClassName('tags')[0];
+    let logs = document.getElementsByClassName('logs')[0];
 
     let tagElement = tag => {
         let el = document.createElement('li');
@@ -26,6 +27,43 @@
         el.append(name);
 
         return el;
+    };
+
+    let logElement = log => {
+        let el = document.createElement('tr');
+        el.classList.add('log');
+
+        let name = document.createElement('td');
+        let time = document.createElement('td');
+        let dir  = document.createElement('td');
+
+        name.innerHTML = (log.first_name || '') + ' ' + log.last_name;
+        time.innerHTML = log.time;
+        dir.innerHTML = log.direction === 1 ? "IN" : "OUT";
+
+        el.append(name);
+        el.append(time);
+        el.append(dir);
+
+        return el;
+    };
+
+    let loadTags = () => {
+        fetch('http://' + config.wiattendServerUrl + '/tags')
+        .then(res => res.json())
+        .then(json => json.data.forEach(tag => tags.append(tagElement(tag))));
+    };
+
+    let loadLogs = () => {
+        let _logs = logs.getElementsByClassName('log');
+
+        while(_logs.length > 0) {
+            _logs[0].parentNode.removeChild(_logs[0]);
+        }
+
+        fetch('http://' + config.wiattendServerUrl + '/logs')
+        .then(res => res.json())
+        .then(json => json.data.forEach(log => logs.append(logElement(log))));
     };
 
     let ws = new WebSocket('ws://' + config.wiattendServerUrl);
@@ -55,6 +93,8 @@
             loggedTag.classList.add(tag.next_direction === 1 ? 'present' : 'absent');
             loggedTag.classList.add('animated');
             loggedTag.classList.add(config.tagAnimateCssEffect);
+
+            loadLogs();
             
             setTimeout(() => {
                 loggedTag.classList.remove('animated');
@@ -63,7 +103,6 @@
         }
     };
 
-    fetch('http://' + config.wiattendServerUrl + '/tags')
-        .then(res => res.json())
-        .then(json => json.data.forEach(tag => tags.append(tagElement(tag))));
+    loadTags();
+    loadLogs();
 })();

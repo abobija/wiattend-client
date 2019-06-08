@@ -8,11 +8,13 @@ h1.title {
     text-shadow: 1px 1px 0px black;
 }
 ul, li { padding: 0; margin: 0; list-style-type: none; }
-.tags { margin: 0 50px; width: 60%; }
+.tags { margin: 0 50px; width: 60% }
+.logs { width: 30%; }
+.logs th { text-align: left; }
 .tag {
     float: left;
     width: 280px;
-    padding: 40px 20px;
+    padding: 50px 20px;
     margin: 10px;
     background: #ffffff;
     border-radius: 10px;
